@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechStore - Tienda de Productos Digitales</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                Tech<span>Store</span>
+            </div>
+            <button class="carrito-icono" id="cartIcon">
+                🛒
+                <span id="carritoCount">0</span>
+            </button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Filtros -->
+        <div class="filtros">
+            <h3>Filtrar productos</h3>
+            <div class="filtros-grid">
+                <div class="categoria-filtros">
+                    <button class="btn-categoria activo" data-categoria="todos">Todos</button>
+                    <button class="btn-categoria" data-categoria="cursos">Cursos</button>
+                    <button class="btn-categoria" data-categoria="hardware">Hardware</button>
+                    <button class="btn-categoria" data-categoria="accesorios">Accesorios</button>
+                </div>
+                <div class="rango-precio">
+                    <input type="number" id="precioMin" placeholder="Precio mínimo" step="1000">
+                    <span>-</span>
+                    <input type="number" id="precioMax" placeholder="Precio máximo" step="1000">
+                    <button id="btnAplicarFiltros" class="btn-categoria">Aplicar</button>
+                    <button id="btnResetFiltros" class="btn-categoria">Resetear</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Productos -->
+        <div id="productosContainer" class="productos-grid">
+            <!-- Los productos se cargarán dinámicamente desde JS -->
+        </div>
+    </main>
+
+    <!-- Carrito Sidebar -->
+    <div id="overlay" class="overlay"></div>
+    <div id="cartSidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h3>Mi Carrito</h3>
+            <button class="close-cart" id="closeCart">&times;</button>
+        </div>
+        <div id="carritoItems" class="cart-items">
+            <!-- Items del carrito -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                Total: <span id="carritoTotal">$0</span>
+            </div>
+            <button id="btnComprar" class="btn-comprar">Finalizar Compra</button>
+            <button id="btnVaciarCarrito" class="btn-vaciar">Vaciar Carrito</button>
+        </div>
+    </div>
+
+    <!-- Scripts como módulos ES6 -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
