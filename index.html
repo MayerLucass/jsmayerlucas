@@ -2,72 +2,827 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechStore - Tienda de Productos Digitales</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <!-- SweetAlert2 CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>SweetBox · Catálogo profesional de postres</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f5f0eb;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            color: #2c241f;
+            padding: 0;
+            line-height: 1.5;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
+
+        /* Header superior profesional */
+        .top-bar {
+            background: #ffffff;
+            border-bottom: 1px solid #e8e0da;
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.96);
+        }
+
+        .top-bar-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            background: linear-gradient(135deg, #c47a5c, #a86248);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .logo p {
+            font-size: 0.75rem;
+            color: #8b735f;
+        }
+
+        .delivery-selector {
+            display: flex;
+            gap: 12px;
+            background: #f8f4f0;
+            padding: 6px 12px;
+            border-radius: 60px;
+        }
+
+        .mode-btn {
+            padding: 8px 20px;
+            border-radius: 40px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: transparent;
+            color: #6b4e3a;
+            font-size: 0.85rem;
+        }
+
+        .mode-btn.active {
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            color: #c47a5c;
+            font-weight: 600;
+        }
+
+        /* Layout principal */
+        .main-container {
+            max-width: 1280px;
+            margin: 32px auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 32px;
+        }
+
+        @media (max-width: 900px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+        }
+
+        /* Catálogo grid profesional */
+        .catalog-header {
+            margin-bottom: 24px;
+        }
+
+        .catalog-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c241f;
+        }
+
+        .catalog-header p {
+            color: #8b735f;
+            font-size: 0.85rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 24px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid #ede5df;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.12);
+            border-color: #decbbf;
+        }
+
+        .product-image {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-start;
+        }
+
+        .badge-stock {
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            margin: 12px;
+            font-weight: 500;
+        }
+
+        .badge-stock.low {
+            background: #e67e22;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 6px;
+            color: #2c241f;
+        }
+
+        .product-description {
+            font-size: 0.8rem;
+            color: #8b735f;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 16px;
+        }
+
+        .current-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #c47a5c;
+        }
+
+        .unit {
+            font-size: 0.7rem;
+            color: #aa8e7a;
+        }
+
+        .stock-info {
+            font-size: 0.7rem;
+            color: #6f9e6f;
+            font-weight: 500;
+        }
+
+        .stock-info.out {
+            color: #c0392b;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 12px;
+            gap: 12px;
+        }
+
+        .qty-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f8f4f0;
+            padding: 4px 12px;
+            border-radius: 40px;
+        }
+
+        .qty-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            font-weight: 600;
+            width: 28px;
+            height: 28px;
+            border-radius: 30px;
+            cursor: pointer;
+            color: #c47a5c;
+            transition: 0.1s;
+        }
+
+        .qty-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .qty-number {
+            font-weight: 600;
+            min-width: 28px;
+            text-align: center;
+        }
+
+        .add-to-cart {
+            background: #2c241f;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            flex: 1;
+        }
+
+        .add-to-cart:active {
+            transform: scale(0.96);
+        }
+
+        .add-to-cart:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Sidebar carrito profesional */
+        .cart-sidebar {
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.06);
+            border: 1px solid #ede5df;
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+            padding: 24px;
+        }
+
+        .cart-header {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-items {
+            max-height: 340px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0e8e2;
+        }
+
+        .cart-item-info h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .cart-item-info p {
+            font-size: 0.7rem;
+            color: #8b735f;
+        }
+
+        .cart-item-actions {
+            text-align: right;
+        }
+
+        .cart-item-price {
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .cart-qty-control {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .cart-qty-btn {
+            background: #f0e8e2;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .empty-cart {
+            text-align: center;
+            color: #b9a797;
+            padding: 32px 0;
+        }
+
+        .divider {
+            height: 1px;
+            background: #ede5df;
+            margin: 16px 0;
+        }
+
+        .subtotal-row, .delivery-row, .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .total-row {
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 2px solid #f0e8e2;
+        }
+
+        .delivery-select {
+            background: #faf7f4;
+            padding: 12px;
+            border-radius: 16px;
+            margin: 16px 0;
+        }
+
+        .delivery-select select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 30px;
+            border: 1px solid #e0d6cf;
+            background: white;
+            font-family: inherit;
+            margin-top: 6px;
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            width: 100%;
+            border: none;
+            padding: 14px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            margin-top: 16px;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+
+        .btn-whatsapp:active {
+            background: #1da15f;
+        }
+
+        .clear-cart {
+            background: transparent;
+            border: 1px solid #e0d6cf;
+            padding: 8px;
+            border-radius: 40px;
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            color: #8b735f;
+        }
+
+        footer {
+            text-align: center;
+            padding: 32px;
+            color: #b9a797;
+            font-size: 0.75rem;
+            border-top: 1px solid #ede5df;
+            margin-top: 40px;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">
-                Tech<span>Store</span>
-            </div>
-            <button class="carrito-icono" id="cartIcon">
-                🛒
-                <span id="carritoCount">0</span>
-            </button>
-        </nav>
-    </header>
 
-    <main class="container">
-        <!-- Filtros -->
-        <div class="filtros">
-            <h3>Filtrar productos</h3>
-            <div class="filtros-grid">
-                <div class="categoria-filtros">
-                    <button class="btn-categoria activo" data-categoria="todos">Todos</button>
-                    <button class="btn-categoria" data-categoria="cursos">Cursos</button>
-                    <button class="btn-categoria" data-categoria="hardware">Hardware</button>
-                    <button class="btn-categoria" data-categoria="accesorios">Accesorios</button>
-                </div>
-                <div class="rango-precio">
-                    <input type="number" id="precioMin" placeholder="Precio mínimo" step="1000">
-                    <span>-</span>
-                    <input type="number" id="precioMax" placeholder="Precio máximo" step="1000">
-                    <button id="btnAplicarFiltros" class="btn-categoria">Aplicar</button>
-                    <button id="btnResetFiltros" class="btn-categoria">Resetear</button>
-                </div>
-            </div>
+<div class="top-bar">
+    <div class="top-bar-content">
+        <div class="logo">
+            <h1>🍰 SweetBox</h1>
+            <p>postres artesanales · ingredientes reales</p>
         </div>
-
-        <!-- Productos -->
-        <div id="productosContainer" class="productos-grid">
-            <!-- Los productos se cargarán dinámicamente desde JS -->
-        </div>
-    </main>
-
-    <!-- Carrito Sidebar -->
-    <div id="overlay" class="overlay"></div>
-    <div id="cartSidebar" class="cart-sidebar">
-        <div class="cart-header">
-            <h3>Mi Carrito</h3>
-            <button class="close-cart" id="closeCart">&times;</button>
-        </div>
-        <div id="carritoItems" class="cart-items">
-            <!-- Items del carrito -->
-        </div>
-        <div class="cart-footer">
-            <div class="cart-total">
-                Total: <span id="carritoTotal">$0</span>
-            </div>
-            <button id="btnComprar" class="btn-comprar">Finalizar Compra</button>
-            <button id="btnVaciarCarrito" class="btn-vaciar">Vaciar Carrito</button>
+        <div class="delivery-selector" id="deliveryModeToggle">
+            <button class="mode-btn active" data-mode="retiro">🏠 Retiro en local</button>
+            <button class="mode-btn" data-mode="delivery">🛵 Delivery</button>
         </div>
     </div>
+</div>
 
-    <!-- Scripts como módulos ES6 -->
-    <script type="module" src="js/app.js"></script>
+<div class="main-container">
+    <!-- Catálogo -->
+    <div>
+        <div class="catalog-header">
+            <h2>Seleccioná tus postres</h2>
+            <p>🍫 stock actualizado · preparación artesanal</p>
+        </div>
+        <div class="products-grid" id="productsGrid"></div>
+    </div>
+
+    <!-- Carrito lateral -->
+    <div class="cart-sidebar">
+        <div class="cart-header">
+            <span>🧾 Tu pedido</span>
+            <span id="cartCount">0</span>
+        </div>
+        <div id="cartItemsList" class="cart-items"></div>
+        <div class="divider"></div>
+        <div class="subtotal-row">
+            <span>Subtotal</span>
+            <span id="subtotal">$0</span>
+        </div>
+        <div id="deliveryCostContainer" class="delivery-row">
+            <span>Envío</span>
+            <span id="deliveryCost">$0</span>
+        </div>
+        <div class="total-row">
+            <span><strong>Total</strong></span>
+            <span id="totalAmount"><strong>$0</strong></span>
+        </div>
+
+        <!-- Zonas de envío (solo se muestra en delivery) -->
+        <div id="deliveryZoneBox" class="delivery-select" style="display: none;">
+            <label>📍 Zona de envío</label>
+            <select id="deliveryZone">
+                <option value="0">Seleccionar zona</option>
+                <option value="1200">Centro / Microcentro - $1200</option>
+                <option value="1800">Zona norte (Belgrano, Nuñez) - $1800</option>
+                <option value="2200">Zona oeste (Caballito, Flores) - $2200</option>
+                <option value="2800">Zona sur (Boedo, Once) - $2800</option>
+            </select>
+        </div>
+
+        <button class="btn-whatsapp" id="sendWppBtn">📲 Enviar pedido por WhatsApp</button>
+        <button class="clear-cart" id="clearCartBtn">Vaciar carrito</button>
+    </div>
+</div>
+<footer>
+    ✨ Los horarios de retiro son de 11 a 19hs · Delivery sujeto a disponibilidad de cobertura
+</footer>
+
+<script>
+    // ---------- BASE DE DATOS DE POSTRES (con inventario realista) ----------
+    const products = [
+        { id: 1, name: "Tarta de Frambuesa", description: "Masa sablé, crema pastelera y frambuesas frescas", price: 4800, stock: 12, image: "https://placehold.co/600x400/f9e5df/8b5e3c?text=🍰 Frambuesa", emoji: "🍰" },
+        { id: 2, name: "Cheesecake Matcha", description: "Base de galleta, queso crema y matcha orgánico", price: 5500, stock: 8, image: "https://placehold.co/600x400/e3f0e0/8b5e3c?text=🍵 Matcha", emoji: "🍵" },
+        { id: 3, name: "Rollos de Canela", description: "Masa brioche, glaseado de queso crema", price: 3500, stock: 15, image: "https://placehold.co/600x400/f7e2c4/8b5e3c?text=🤎 Canela", emoji: "🤎" },
+        { id: 4, name: "Pavlova Frutilla", description: "Merengue crujiente, crema chantilly y frutillas", price: 6200, stock: 5, image: "https://placehold.co/600x400/fce4ec/8b5e3c?text=🍓 Pavlova", emoji: "🍓" },
+        { id: 5, name: "Brownie Dulce de Leche", description: "Nueces, corazón de dulce de leche repostero", price: 4200, stock: 10, image: "https://placehold.co/600x400/e8d5c4/8b5e3c?text=🍫 Brownie", emoji: "🍫" },
+        { id: 6, name: "Lemon Pie", description: "Masa sablé, curd de limón y merengue italiano", price: 4900, stock: 7, image: "https://placehold.co/600x400/fcf2cf/8b5e3c?text=🍋 Lemon Pie", emoji: "🍋" }
+    ];
+
+    let cart = []; // { id, name, price, quantity, maxStock }
+    let deliveryMode = "retiro"; // retiro o delivery
+    let selectedZone = 0; // costo extra de envío
+
+    // Funciones de persistencia
+    function saveToLocal() {
+        localStorage.setItem("sweetbox_cart", JSON.stringify(cart));
+        localStorage.setItem("sweetbox_mode", deliveryMode);
+    }
+
+    function loadFromLocal() {
+        const savedCart = localStorage.getItem("sweetbox_cart");
+        if(savedCart) {
+            try {
+                cart = JSON.parse(savedCart);
+                // validar que no exceda stock actual
+                cart = cart.filter(item => {
+                    const prod = products.find(p => p.id === item.id);
+                    if(!prod) return false;
+                    if(item.quantity > prod.stock) item.quantity = prod.stock;
+                    return item.quantity > 0;
+                });
+            } catch(e) { cart = []; }
+        }
+        const savedMode = localStorage.getItem("sweetbox_mode");
+        if(savedMode === "delivery" || savedMode === "retiro") deliveryMode = savedMode;
+        else deliveryMode = "retiro";
+    }
+
+    // Actualizar visualmente el stock UI y botones
+    function renderCatalog() {
+        const grid = document.getElementById("productsGrid");
+        if(!grid) return;
+        grid.innerHTML = "";
+        products.forEach(prod => {
+            const cartItem = cart.find(c => c.id === prod.id);
+            const currentQty = cartItem ? cartItem.quantity : 0;
+            const available = prod.stock - currentQty;
+            const isOut = prod.stock === 0 || available === 0;
+
+            const card = document.createElement("div");
+            card.className = "product-card";
+            card.innerHTML = `
+                <div class="product-image" style="background-image: url('${prod.image}'); background-size: cover;">
+                    <div class="badge-stock ${prod.stock < 3 ? 'low' : ''}">${prod.stock} unidades</div>
+                </div>
+                <div class="product-info">
+                    <div class="product-title">${prod.emoji} ${prod.name}</div>
+                    <div class="product-description">${prod.description}</div>
+                    <div class="price-row">
+                        <span class="current-price">$${prod.price.toLocaleString()}</span>
+                        <span class="stock-info ${isOut ? 'out' : ''}">${isOut ? '❌ Sin stock' : '✅ disponible'}</span>
+                    </div>
+                    <div class="quantity-control">
+                        <div class="qty-selector">
+                            <button class="qty-btn" data-id="${prod.id}" data-delta="-1" ${available === 0 ? 'disabled' : ''}>−</button>
+                            <span class="qty-number" id="qty-display-${prod.id}">${currentQty}</span>
+                            <button class="qty-btn" data-id="${prod.id}" data-delta="1" ${available === 0 ? 'disabled' : ''}>+</button>
+                        </div>
+                        <button class="add-to-cart" data-id="${prod.id}" data-add-one ${available === 0 ? 'disabled' : ''}>Agregar</button>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+
+        // eventos de cantidad y agregar
+        document.querySelectorAll(".qty-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const id = parseInt(btn.dataset.id);
+                const delta = parseInt(btn.dataset.delta);
+                const product = products.find(p => p.id === id);
+                if(!product) return;
+                const cartItem = cart.find(c => c.id === id);
+                let current = cartItem ? cartItem.quantity : 0;
+                let newQty = current + delta;
+                if(newQty < 0) newQty = 0;
+                if(newQty > product.stock) newQty = product.stock;
+                if(newQty === 0) {
+                    cart = cart.filter(c => c.id !== id);
+                } else {
+                    if(cartItem) {
+                        cartItem.quantity = newQty;
+                    } else {
+                        cart.push({ id: product.id, name: product.name, price: product.price, quantity: newQty });
+                    }
+                }
+                saveToLocal();
+                renderCatalog();
+                renderCartSidebar();
+            });
+        });
+
+        document.querySelectorAll(".add-to-cart[data-add-one]").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const id = parseInt(btn.dataset.id);
+                const product = products.find(p => p.id === id);
+                if(!product) return;
+                const cartItem = cart.find(c => c.id === id);
+                let newQty = cartItem ? cartItem.quantity + 1 : 1;
+                if(newQty > product.stock) newQty = product.stock;
+                if(newQty === 0) return;
+                if(cartItem) {
+                    cartItem.quantity = newQty;
+                } else {
+                    cart.push({ id: product.id, name: product.name, price: product.price, quantity: newQty });
+                }
+                saveToLocal();
+                renderCatalog();
+                renderCartSidebar();
+            });
+        });
+    }
+
+    function renderCartSidebar() {
+        const container = document.getElementById("cartItemsList");
+        const cartCountSpan = document.getElementById("cartCount");
+        const subtotalSpan = document.getElementById("subtotal");
+        const totalSpan = document.getElementById("totalAmount");
+        const deliveryCostSpan = document.getElementById("deliveryCost");
+
+        let subtotal = 0;
+        let itemCount = 0;
+        container.innerHTML = "";
+
+        if(cart.length === 0) {
+            container.innerHTML = '<div class="empty-cart">🍬 Aún no agregaste postres</div>';
+        } else {
+            cart.forEach(item => {
+                const prod = products.find(p => p.id === item.id);
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+                itemCount += item.quantity;
+                const div = document.createElement("div");
+                div.className = "cart-item";
+                div.innerHTML = `
+                    <div class="cart-item-info">
+                        <h4>${prod?.emoji || "🍰"} ${item.name}</h4>
+                        <p>$${item.price.toLocaleString()} c/u</p>
+                    </div>
+                    <div class="cart-item-actions">
+                        <div class="cart-item-price">$${itemTotal.toLocaleString()}</div>
+                        <div class="cart-qty-control">
+                            <button class="cart-qty-btn" data-id="${item.id}" data-delta="-1">−</button>
+                            <span>${item.quantity}</span>
+                            <button class="cart-qty-btn" data-id="${item.id}" data-delta="1">+</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Eventos de los botones dentro del carrito
+        document.querySelectorAll(".cart-qty-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const id = parseInt(btn.dataset.id);
+                const delta = parseInt(btn.dataset.delta);
+                const targetProduct = products.find(p => p.id === id);
+                if(!targetProduct) return;
+                const cartIdx = cart.findIndex(c => c.id === id);
+                if(cartIdx === -1) return;
+                let newQty = cart[cartIdx].quantity + delta;
+                if(newQty < 0) newQty = 0;
+                if(newQty > targetProduct.stock) newQty = targetProduct.stock;
+                if(newQty === 0) {
+                    cart.splice(cartIdx,1);
+                } else {
+                    cart[cartIdx].quantity = newQty;
+                }
+                saveToLocal();
+                renderCatalog();
+                renderCartSidebar();
+            });
+        });
+
+        cartCountSpan.innerText = itemCount;
+        subtotalSpan.innerText = `$${subtotal.toLocaleString()}`;
+
+        // costo de envío lógico
+        let deliveryCost = 0;
+        if(deliveryMode === "delivery") {
+            deliveryCost = selectedZone;
+        }
+        deliveryCostSpan.innerText = `$${deliveryCost.toLocaleString()}`;
+        const total = subtotal + deliveryCost;
+        totalSpan.innerText = `$${total.toLocaleString()}`;
+    }
+
+    function updateDeliveryUI() {
+        const zoneBox = document.getElementById("deliveryZoneBox");
+        if(deliveryMode === "delivery") {
+            zoneBox.style.display = "block";
+        } else {
+            zoneBox.style.display = "none";
+            selectedZone = 0;
+        }
+        renderCartSidebar();
+    }
+
+    // Construir mensaje de WhatsApp profesional
+    function buildWhatsAppMessage() {
+        if(cart.length === 0) return null;
+        let message = "🍰 *NUEVO PEDIDO - SWEETBOX* 🍰\n";
+        message += `─────────────────────\n`;
+        message += `📦 *Modo:* ${deliveryMode === "retiro" ? "RETIRO EN LOCAL 🏠" : "DELIVERY 🛵"}\n`;
+        let subtotal = 0;
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            subtotal += itemTotal;
+            message += `• ${item.quantity}x ${item.name} → $${itemTotal.toLocaleString()}\n`;
+        });
+        message += `─────────────────────\n`;
+        message += `💰 *Subtotal:* $${subtotal.toLocaleString()}\n`;
+        let deliveryCost = 0;
+        if(deliveryMode === "delivery") {
+            deliveryCost = selectedZone;
+            message += `🚚 *Envío:* $${deliveryCost.toLocaleString()}\n`;
+        }
+        const total = subtotal + deliveryCost;
+        message += `💵 *TOTAL:* $${total.toLocaleString()}\n`;
+        message += `─────────────────────\n`;
+        if(deliveryMode === "delivery") {
+            message += `📍 *Zona de envío seleccionada:* ${getZoneName()}\n`;
+            message += `⚠️ El cliente espera coordinar dirección exacta.\n`;
+        } else {
+            message += `🏪 Retira por: Av. Corrientes 1823, CABA (11 a 19hs).\n`;
+        }
+        message += `\n📲 *Datos del cliente:* responder a este chat para confirmar stock y horario.`;
+        return message;
+    }
+
+    function getZoneName() {
+        const select = document.getElementById("deliveryZone");
+        if(select && select.options[select.selectedIndex]) {
+            return select.options[select.selectedIndex].text;
+        }
+        return "No especificada";
+    }
+
+    function sendOrder() {
+        if(cart.length === 0) {
+            alert("❌ No hay productos en el carrito. Agregá al menos un postre.");
+            return;
+        }
+        if(deliveryMode === "delivery" && selectedZone === 0) {
+            alert("⚠️ Por favor seleccioná una zona de envío antes de continuar.");
+            return;
+        }
+        const message = buildWhatsAppMessage();
+        if(!message) return;
+        // NÚMERO REAL DEL DUEÑO (MODIFICAR AQUÍ)
+        const ownerPhone = "5491155577888";  // ← CAMBIAR POR EL NÚMERO DEL NEGOCIO
+        const encoded = encodeURIComponent(message);
+        window.open(`https://wa.me/${ownerPhone}?text=${encoded}`, '_blank');
+    }
+
+    // Eventos globales
+    function initEvents() {
+        // modo entrega
+        document.querySelectorAll(".mode-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const mode = btn.dataset.mode;
+                deliveryMode = mode;
+                saveToLocal();
+                document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                updateDeliveryUI();
+                renderCartSidebar();
+            });
+        });
+
+        const zoneSelect = document.getElementById("deliveryZone");
+        if(zoneSelect) {
+            zoneSelect.addEventListener("change", (e) => {
+                selectedZone = parseInt(e.target.value);
+                renderCartSidebar();
+                saveToLocal();
+            });
+        }
+
+        document.getElementById("sendWppBtn")?.addEventListener("click", sendOrder);
+        document.getElementById("clearCartBtn")?.addEventListener("click", () => {
+            cart = [];
+            saveToLocal();
+            renderCatalog();
+            renderCartSidebar();
+        });
+    }
+
+    function init() {
+        loadFromLocal();
+        renderCatalog();
+        renderCartSidebar();
+        initEvents();
+        updateDeliveryUI();
+        // preservar modo visual
+        if(deliveryMode === "delivery") {
+            document.querySelector(".mode-btn[data-mode='delivery']")?.classList.add("active");
+            document.querySelector(".mode-btn[data-mode='retiro']")?.classList.remove("active");
+        } else {
+            document.querySelector(".mode-btn[data-mode='retiro']")?.classList.add("active");
+            document.querySelector(".mode-btn[data-mode='delivery']")?.classList.remove("active");
+        }
+        const savedZone = localStorage.getItem("sweetbox_zone");
+        if(savedZone && document.getElementById("deliveryZone")) {
+            selectedZone = parseInt(savedZone);
+            document.getElementById("deliveryZone").value = selectedZone;
+        }
+        // guardar zona
+        document.getElementById("deliveryZone")?.addEventListener("change", (e) => {
+            localStorage.setItem("sweetbox_zone", e.target.value);
+        });
+        renderCartSidebar();
+    }
+    init();
+</script>
 </body>
 </html>
